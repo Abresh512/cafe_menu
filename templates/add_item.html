@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Menu Item</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Add Menu Item</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="text" name="name" placeholder="Item name" required>
+        <input type="number" step="0.01" name="price" placeholder="Price" required>
+        <select name="category" required>
+            <option value="">Select Category</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Drinks">Drinks</option>
+        </select>
+        <input type="file" name="image" accept="image/*">
+        <button type="submit">Add Item</button>
+    </form>
+    <a class="back-link" href="/">← Back to Menu</a>
+</div>
+
+</body>
+</html>

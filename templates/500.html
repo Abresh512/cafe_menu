@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Error - The Cozy Corner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .error-container {
+            text-align: center;
+            padding: 100px 20px;
+        }
+        .error-code {
+            font-size: 120px;
+            color: #dc3545;
+            margin: 0;
+        }
+        .error-message {
+            font-size: 24px;
+            color: #333;
+            margin: 20px 0;
+        }
+        .error-description {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        .back-home {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #6b4a32;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+        .back-home:hover {
+            background: #5a3a22;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1 class="error-code">500</h1>
+        <h2 class="error-message">Internal Server Error</h2>
+        <p class="error-description">Something went wrong on our end. Please try again later.</p>
+        <a href="{{ url_for('index') }}" class="back-home">Back to Menu</a>
+    </div>
+</body>
+</html>

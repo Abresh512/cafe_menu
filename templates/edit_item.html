@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Menu Item</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], input[type="file"] {
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        select {
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .current-image {
+            margin-top: 10px;
+        }
+        .current-image img {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 5px 0 0;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary { background-color: #007bff; }
+        .btn-secondary { background-color: #6c757d; }
+        .buttons {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Menu Item</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ item[1] }}" required>
+
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" step="0.01" value="{{ item[2] }}" required>
+
+            <label for="category">Category:</label>
+            <select id="category" name="category" required>
+                <option value="Breakfast" {% if item[4] == 'Breakfast' %}selected{% endif %}>Breakfast</option>
+                <option value="Lunch" {% if item[4] == 'Lunch' %}selected{% endif %}>Lunch</option>
+                <option value="Drinks" {% if item[4] == 'Drinks' %}selected{% endif %}>Drinks</option>
+            </select>
+
+            <label for="image">Image (leave empty to keep current):</label>
+            <input type="file" id="image" name="image" accept="image/*">
+            
+            {% if item[3] %}
+            <div class="current-image">
+                <p>Current Image:</p>
+                <img src="{{ url_for('static', filename='uploads/' + item[3]) }}" alt="Current image">
+            </div>
+            {% endif %}
+
+            <div class="buttons">
+                <button type="submit" class="btn btn-primary">Update Item</button>
+                <a href="{{ url_for('admin') }}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

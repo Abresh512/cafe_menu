@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Cozy Corner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="top-bar">
+    <div class="logo">
+        <h1>The Cozy Corner</h1>
+        <p>Delicious food & drinks</p>
+    </div>
+    <a href="{{ url_for('admin') }}" class="admin-btn">👤 Admin Panel</a>
+</header>
+
+<!-- FILTER BUTTONS -->
+<div class="filters">
+    <a href="{{ url_for('index', category='All') }}" class="filter-btn {% if current_category == 'All' %}active{% endif %}">All</a>
+    <a href="{{ url_for('index', category='Breakfast') }}" class="filter-btn {% if current_category == 'Breakfast' %}active{% endif %}">Breakfast</a>
+    <a href="{{ url_for('index', category='Lunch') }}" class="filter-btn {% if current_category == 'Lunch' %}active{% endif %}">Lunch</a>
+    <a href="{{ url_for('index', category='Drinks') }}" class="filter-btn {% if current_category == 'Drinks' %}active{% endif %}">Drinks</a>
+</div>
+
+<!-- MENU GRID -->
+<section class="menu">
+    {% for item in items %}
+    <div class="card">
+        {% if item[3] %}
+            <img src="{{ url_for('static', filename='uploads/' + item[3]) }}">
+        {% else %}
+            <img src="https://via.placeholder.com/400x250?text=No+Image">
+        {% endif %}
+        <div class="card-content">
+            <h3>{{ item[1] }}</h3>
+            <p class="price">{{ "%.2f"|format(item[2]) }} Birr</p>
+        </div>
+    </div>
+    {% endfor %}
+</section>
+
+<!-- FOOTER -->
+<footer>
+    © 2025 The Cozy Corner. All rights reserved.
+</footer>
+
+<!-- MODAL -->
+<div id="addModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Add New Menu Item</h2>
+        <form method="POST" enctype="multipart/form-data" action="{{ url_for('add_item') }}">
+            <input type="text" name="name" placeholder="Item name" required>
+            <input type="number" step="0.01" name="price" placeholder="Price" required>
+            <select name="category" required>
+                <option value="">Select Category</option>
+                <option value="Breakfast">Breakfast</option>
+                <option value="Lunch">Lunch</option>
+                <option value="Drinks">Drinks</option>
+            </select>
+            <input type="file" name="image" accept="image/*">
+            <button type="submit">Add Item</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function showModal() {
+    document.getElementById('addModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('addModal').style.display = 'none';
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    var modal = document.getElementById('addModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+</script>
+
+</body>
+</html>

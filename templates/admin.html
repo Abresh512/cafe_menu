@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Cafe Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 5px;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary { background-color: #007bff; }
+        .btn-success { background-color: #28a745; }
+        .btn-danger { background-color: #dc3545; }
+        .btn-secondary { background-color: #6c757d; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .item-image {
+            max-width: 50px;
+            max-height: 50px;
+            object-fit: cover;
+        }
+        .actions {
+            white-space: nowrap;
+        }
+        
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: slideIn 0.3s ease-in-out;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .modal h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .modal form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal input, .modal select {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .modal button {
+            padding: 10px;
+            background-color: #6b4a32;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .modal button:hover {
+            background-color: #5a3a22;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            
+            tr {
+                border: 1px solid #ccc;
+                margin-bottom: 15px;
+                border-radius: 5px;
+                overflow: hidden;
+            }
+            
+            td {
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding: 12px 10px 12px 50%;
+                text-align: left;
+            }
+            
+            td:before {
+                position: absolute;
+                top: 12px;
+                left: 10px;
+                width: 40%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+                color: #666;
+            }
+            
+            td:nth-of-type(1):before { content: "ID"; }
+            td:nth-of-type(2):before { content: "Image"; }
+            td:nth-of-type(3):before { content: "Name"; }
+            td:nth-of-type(4):before { content: "Price"; }
+            td:nth-of-type(5):before { content: "Category"; }
+            td:nth-of-type(6):before { content: "Actions"; }
+            
+            .item-image {
+                max-width: 40px;
+                max-height: 40px;
+            }
+            
+            .actions {
+                text-align: center;
+            }
+            
+            .actions .btn {
+                display: inline-block;
+                margin: 2px;
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+                padding: 15px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            .modal h2 {
+                font-size: 18px;
+                margin-bottom: 15px;
+            }
+            
+            .modal input, .modal select {
+                margin-bottom: 10px;
+                padding: 8px;
+                font-size: 14px;
+            }
+            
+            .modal button {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .modal form button {
+                display: block;
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            .btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>☕ Cafe Menu Admin Panel</h1>
+        <a href="#" onclick="showModal()" class="btn btn-success">Add New Item</a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">View Menu</a>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>
+                        {% if item[3] %}
+                            <img src="{{ url_for('static', filename='uploads/' + item[3]) }}" alt="{{ item[1] }}" class="item-image">
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ "%.2f"|format(item[2]) }} Birr</td>
+                    <td>{{ item[4] }}</td>
+                    <td class="actions">
+                        <a href="{{ url_for('edit_item', item_id=item[0]) }}" class="btn btn-primary">Edit</a>
+                        <button type="button" class="btn btn-danger" data-id="{{ item[0] }}" data-name="{{ item[1]|e }}" onclick="confirmDelete(this)">Delete</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        {% if not items %}
+        <p style="text-align: center; margin-top: 20px;">No menu items found. <a href="#" onclick="showModal()">Add one now</a>.</p>
+        {% endif %}
+    </div>
+
+<!-- MODAL -->
+<div id="addModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Add New Menu Item</h2>
+        <form method="POST" enctype="multipart/form-data" action="{{ url_for('add_item') }}">
+            <input type="text" name="name" placeholder="Item name" required>
+            <input type="number" step="0.01" name="price" placeholder="Price" required>
+            <select name="category" required>
+                <option value="">Select Category</option>
+                <option value="Breakfast">Breakfast</option>
+                <option value="Lunch">Lunch</option>
+                <option value="Drinks">Drinks</option>
+            </select>
+            <input type="file" name="image" accept="image/*">
+            <button type="submit">Add Item</button>
+        </form>
+    </div>
+</div>
+
+<!-- DELETE CONFIRMATION MODAL -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeDeleteModal()">&times;</span>
+        <h2>Confirm Deletion</h2>
+        <p>Are you sure you want to delete "<span id="deleteItemName"></span>"?</p>
+        <p style="color: #dc3545; font-weight: bold;">This action cannot be undone.</p>
+        <form id="deleteForm" method="POST">
+            <button type="submit" class="btn btn-danger" style="background-color: #dc3545; border-color: #dc3545;">Yes, Delete</button>
+            <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function showModal() {
+    document.getElementById('addModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('addModal').style.display = 'none';
+}
+
+function confirmDelete(button) {
+    var id = button.getAttribute('data-id');
+    var name = button.getAttribute('data-name');
+    document.getElementById('deleteItemName').textContent = name;
+    document.getElementById('deleteForm').action = '/delete/' + id;
+    document.getElementById('deleteModal').style.display = 'block';
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+}
+
+// Close modals when clicking outside
+window.onclick = function(event) {
+    var addModal = document.getElementById('addModal');
+    var deleteModal = document.getElementById('deleteModal');
+    if (event.target == addModal) {
+        addModal.style.display = 'none';
+    }
+    if (event.target == deleteModal) {
+        deleteModal.style.display = 'none';
+    }
+}
+</script>
+
+</body>
+</html>
